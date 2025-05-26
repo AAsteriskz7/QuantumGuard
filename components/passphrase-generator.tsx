@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -18,18 +18,6 @@ export default function PassphraseGenerator() {
   const [quantumEntropy, setQuantumEntropy] = useState<number>(0)
   const [copied, setCopied] = useState<boolean>(false)
   const [isGenerating, setIsGenerating] = useState<boolean>(false)
-
-  // Calculate entropy when passphrase changes
-  useEffect(() => {
-    if (passphrase) {
-      // Entropy calculation: log2(wordlist size) * number of words
-      const calculatedEntropy = ENTROPY_PER_WORD * numWords
-      setEntropy(calculatedEntropy)
-
-      // Quantum entropy is roughly half of classical entropy due to Grover's algorithm
-      setQuantumEntropy(calculatedEntropy / 2)
-    }
-  }, [passphrase, numWords])
 
   const generatePassphrase = () => {
     setIsGenerating(true)
@@ -50,6 +38,11 @@ export default function PassphraseGenerator() {
         // Join words with the selected separator
         const newPassphrase = selectedWords.join(separator)
         setPassphrase(newPassphrase)
+
+        // Calculate entropy only when passphrase is generated
+        const calculatedEntropy = ENTROPY_PER_WORD * numWords
+        setEntropy(calculatedEntropy)
+        setQuantumEntropy(calculatedEntropy / 2)
       } catch (error) {
         console.error("Error generating passphrase:", error)
       } finally {
@@ -170,7 +163,7 @@ export default function PassphraseGenerator() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="p-4 border rounded-lg bg-blue-900/20">
+              <div className="p-4 border rounded-lg bg-blue-500/5 dark:bg-blue-900/20">
                 <div className="flex items-center mb-2">
                   <Shield className="w-4 h-4 mr-2 text-blue-500" />
                   <h3 className="text-sm font-medium">Classical Entropy</h3>
@@ -181,7 +174,7 @@ export default function PassphraseGenerator() {
                 <p className="text-sm text-muted-foreground">{getEntropyDescription(entropy)}</p>
               </div>
 
-              <div className="p-4 border rounded-lg bg-teal-900/20">
+              <div className="p-4 border rounded-lg bg-teal-500/5 dark:bg-teal-900/20">
                 <div className="flex items-center mb-2">
                   <Shield className="w-4 h-4 mr-2 text-teal-500" />
                   <h3 className="text-sm font-medium">Quantum Resistance</h3>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -28,21 +28,6 @@ export default function PasswordGenerator() {
   const numberChars = "0123456789"
   const symbolChars = "!@#$%^&*()_+-=[]{}|;':\",./<>?"
 
-  // Calculate entropy when settings change
-  useEffect(() => {
-    if (password) {
-      let charsetSize = 0
-      if (includeUppercase) charsetSize += uppercaseChars.length
-      if (includeLowercase) charsetSize += lowercaseChars.length
-      if (includeNumbers) charsetSize += numberChars.length
-      if (includeSymbols) charsetSize += symbolChars.length
-
-      const calculatedEntropy = length * Math.log2(charsetSize)
-      setEntropy(calculatedEntropy)
-      setQuantumEntropy(calculatedEntropy / 2)
-    }
-  }, [password, length, includeUppercase, includeLowercase, includeNumbers, includeSymbols])
-
   const generatePassword = () => {
     setIsGenerating(true)
 
@@ -69,6 +54,11 @@ export default function PasswordGenerator() {
         }
 
         setPassword(result)
+
+        // Calculate entropy only when password is generated
+        const calculatedEntropy = length * Math.log2(charset.length)
+        setEntropy(calculatedEntropy)
+        setQuantumEntropy(calculatedEntropy / 2)
       } catch (error) {
         console.error("Error generating password:", error)
       } finally {
@@ -151,25 +141,41 @@ export default function PasswordGenerator() {
             <Label>Character Types</Label>
             <div className="grid grid-cols-2 gap-3">
               <div className="flex items-center space-x-2">
-                <Checkbox id="uppercase" checked={includeUppercase} onCheckedChange={setIncludeUppercase} />
+                <Checkbox 
+                  id="uppercase" 
+                  checked={includeUppercase} 
+                  onCheckedChange={(checked) => setIncludeUppercase(checked === true)} 
+                />
                 <Label htmlFor="uppercase" className="text-sm">
                   Uppercase (A-Z)
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <Checkbox id="lowercase" checked={includeLowercase} onCheckedChange={setIncludeLowercase} />
+                <Checkbox 
+                  id="lowercase" 
+                  checked={includeLowercase} 
+                  onCheckedChange={(checked) => setIncludeLowercase(checked === true)} 
+                />
                 <Label htmlFor="lowercase" className="text-sm">
                   Lowercase (a-z)
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <Checkbox id="numbers" checked={includeNumbers} onCheckedChange={setIncludeNumbers} />
+                <Checkbox 
+                  id="numbers" 
+                  checked={includeNumbers} 
+                  onCheckedChange={(checked) => setIncludeNumbers(checked === true)} 
+                />
                 <Label htmlFor="numbers" className="text-sm">
                   Numbers (0-9)
                 </Label>
               </div>
               <div className="flex items-center space-x-2">
-                <Checkbox id="symbols" checked={includeSymbols} onCheckedChange={setIncludeSymbols} />
+                <Checkbox 
+                  id="symbols" 
+                  checked={includeSymbols} 
+                  onCheckedChange={(checked) => setIncludeSymbols(checked === true)} 
+                />
                 <Label htmlFor="symbols" className="text-sm">
                   Symbols (!@#$...)
                 </Label>
