@@ -15,11 +15,11 @@ export default function FAQPage() {
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="item-1">
             <AccordionTrigger>
-              Is this really more secure than a password like <code>Xy!7#pQ@Z</code>?
+              Is this really more secure than a password like Xy!7#pQ@Z?
             </AccordionTrigger>
             <AccordionContent>
               <p className="mb-3">
-                Yes, significantly so. While <code>Xy!7#pQ@Z</code> looks complex, it only has about 53 bits of entropy.
+                Yes, significantly so. While Xy!7#pQ@Z looks complex, it only has about 53 bits of entropy.
               </p>
               <p className="mb-3">
                 A 6-word passphrase from our system has approximately 77 bits of entropy, and an 8-word passphrase has
