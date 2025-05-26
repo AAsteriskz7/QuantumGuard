@@ -6,6 +6,7 @@
     <title>QuantumGuard</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -20,7 +21,7 @@
                 <div class="header-top">
                     <h1 class="gradient-text">QuantumGuard</h1>
                     <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
-                        <span class="icon">🌙</span>
+                        <span class="material-icons">dark_mode</span>
                     </button>
                 </div>
                 <p class="subtitle">Generate Your Secure Credentials</p>
@@ -29,8 +30,14 @@
             <!-- Tabs -->
             <div class="tabs">
                 <div class="tabs-list">
-                    <button class="tab-trigger active" data-tab="passphrase">Memorable Passphrases</button>
-                    <button class="tab-trigger" data-tab="password">Random Passwords</button>
+                    <button class="tab-trigger active" data-tab="passphrase" aria-label="Memorable Passphrases">
+                        <span class="material-icons">key</span>
+                        Memorable Passphrases
+                    </button>
+                    <button class="tab-trigger" data-tab="password" aria-label="Random Passwords">
+                        <span class="material-icons">password</span>
+                        Random Passwords
+                    </button>
                 </div>
 
                 <!-- Passphrase Generator -->
@@ -58,24 +65,24 @@
                         </select>
                     </div>
 
-                    <button id="generate-passphrase" class="btn-3d">
-                        <span class="icon">🔄</span>
+                    <button id="generate-passphrase" class="btn-3d" aria-label="Generate Passphrase">
+                        <span class="material-icons">refresh</span>
                         Generate Passphrase
                     </button>
 
                     <div id="passphrase-result" class="result-box hidden">
                         <div class="result-header">
-                            <label>Your Generated Passphrase</label>
-                            <button id="copy-passphrase" class="copy-btn">
-                                <span class="icon">📋</span>
+                            <label for="passphrase-output">Your Generated Passphrase</label>
+                            <button id="copy-passphrase" class="copy-btn" aria-label="Copy passphrase">
+                                <span class="material-icons">content_copy</span>
                             </button>
                         </div>
-                        <input type="text" id="passphrase-output" readonly class="result-input">
+                        <input type="text" id="passphrase-output" readonly class="result-input" aria-label="Generated Passphrase">
                         
                         <div class="stats-grid">
                             <div class="stat-box">
                                 <div class="stat-header">
-                                    <span class="icon">🛡️</span>
+                                    <span class="material-icons">shield</span>
                                     <h3>Classical Entropy</h3>
                                 </div>
                                 <p class="stat-value" id="passphrase-entropy">0 bits</p>
@@ -83,7 +90,7 @@
                             </div>
                             <div class="stat-box">
                                 <div class="stat-header">
-                                    <span class="icon">🔮</span>
+                                    <span class="material-icons">science</span>
                                     <h3>Quantum Resistance</h3>
                                 </div>
                                 <p class="stat-value" id="passphrase-quantum">0 bits</p>
@@ -130,24 +137,24 @@
                         </div>
                     </div>
 
-                    <button id="generate-password" class="btn-3d">
-                        <span class="icon">🔄</span>
+                    <button id="generate-password" class="btn-3d" aria-label="Generate Password">
+                        <span class="material-icons">refresh</span>
                         Generate Password
                     </button>
 
                     <div id="password-result" class="result-box hidden">
                         <div class="result-header">
-                            <label>Your Generated Password</label>
-                            <button id="copy-password" class="copy-btn">
-                                <span class="icon">📋</span>
+                            <label for="password-output">Your Generated Password</label>
+                            <button id="copy-password" class="copy-btn" aria-label="Copy password">
+                                <span class="material-icons">content_copy</span>
                             </button>
                         </div>
-                        <input type="text" id="password-output" readonly class="result-input">
+                        <input type="text" id="password-output" readonly class="result-input" aria-label="Generated Password">
                         
                         <div class="stats-grid">
                             <div class="stat-box">
                                 <div class="stat-header">
-                                    <span class="icon">🛡️</span>
+                                    <span class="material-icons">shield</span>
                                     <h3>Classical Entropy</h3>
                                 </div>
                                 <p class="stat-value" id="password-entropy">0 bits</p>
@@ -155,7 +162,7 @@
                             </div>
                             <div class="stat-box">
                                 <div class="stat-header">
-                                    <span class="icon">🔮</span>
+                                    <span class="material-icons">science</span>
                                     <h3>Quantum Resistance</h3>
                                 </div>
                                 <p class="stat-value" id="password-quantum">0 bits</p>

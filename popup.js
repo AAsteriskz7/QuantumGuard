@@ -20,12 +20,12 @@ function getEntropyDescription(bits) {
 }
 
 function getEntropyColor(bits) {
-    if (bits < 50) return "text-red";
-    if (bits < 80) return "text-yellow";
-    if (bits < 100) return "text-green";
-    if (bits < 128) return "text-blue";
-    if (bits < 150) return "text-teal";
-    return "text-purple";
+    if (bits < 50) return "text-red-500";
+    if (bits < 80) return "text-yellow-500";
+    if (bits < 100) return "text-green-500";
+    if (bits < 128) return "text-blue-500";
+    if (bits < 150) return "text-teal-400";
+    return "text-purple-400";
 }
 
 function getQuantumResistanceLabel(bits) {
@@ -80,11 +80,11 @@ function initTheme() {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         document.documentElement.setAttribute('data-theme', savedTheme);
-        themeToggle.querySelector('.icon').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.querySelector('.material-icons').textContent = savedTheme === 'dark' ? 'light_mode' : 'dark_mode';
     } else {
         const systemTheme = prefersDark.matches ? 'dark' : 'light';
         document.documentElement.setAttribute('data-theme', systemTheme);
-        themeToggle.querySelector('.icon').textContent = systemTheme === 'dark' ? '☀️' : '🌙';
+        themeToggle.querySelector('.material-icons').textContent = systemTheme === 'dark' ? 'light_mode' : 'dark_mode';
     }
 }
 
@@ -94,7 +94,7 @@ themeToggle.addEventListener('click', () => {
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    themeToggle.querySelector('.icon').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+    themeToggle.querySelector('.material-icons').textContent = newTheme === 'dark' ? 'light_mode' : 'dark_mode';
 });
 
 // Tab Switching
@@ -189,10 +189,10 @@ function generatePassword() {
 // Copy to clipboard functions
 function copyToClipboard(text, button) {
     navigator.clipboard.writeText(text).then(() => {
-        const originalText = button.innerHTML;
-        button.innerHTML = '<span class="icon">✓</span>';
+        const originalHTML = button.innerHTML;
+        button.innerHTML = '<span class="material-icons">check</span>';
         setTimeout(() => {
-            button.innerHTML = originalText;
+            button.innerHTML = originalHTML;
         }, 2000);
     });
 }
@@ -209,7 +209,41 @@ copyPasswordBtn.addEventListener('click', () => {
     copyToClipboard(passwordOutput.value, copyPasswordBtn);
 });
 
-// Initialize
+// Add event listeners for sliders
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
+    
+    // Add slider event listeners
+    numWordsSlider.addEventListener('input', function() {
+        const value = this.value;
+        numWordsInput.value = value;
+        numWordsValue.textContent = value;
+        generatePassphrase();
+    });
+
+    numWordsInput.addEventListener('change', function() {
+        const value = Math.min(Math.max(parseInt(this.value) || 4, 4), 30);
+        this.value = value;
+        numWordsSlider.value = value;
+        numWordsValue.textContent = value;
+        generatePassphrase();
+    });
+
+    lengthSlider.addEventListener('input', function() {
+        const value = this.value;
+        lengthInput.value = value;
+        lengthValue.textContent = value;
+        generatePassword();
+    });
+
+    lengthInput.addEventListener('change', function() {
+        const value = Math.min(Math.max(parseInt(this.value) || 8, 8), 64);
+        this.value = value;
+        lengthSlider.value = value;
+        lengthValue.textContent = value;
+        generatePassword();
+    });
+
+    // Generate initial passphrase
+    generatePassphrase();
 }); 
