@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumGuard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Blob animations -->
+        <div class="blob-1"></div>
+        <div class="blob-2"></div>
+        <div class="blob-3"></div>
+
+        <!-- Main content -->
+        <div class="card-3d">
+            <div class="header">
+                <div class="header-top">
+                    <h1 class="gradient-text">QuantumGuard</h1>
+                    <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
+                        <span class="icon">🌙</span>
+                    </button>
+                </div>
+                <p class="subtitle">Generate Your Secure Credentials</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tabs-list">
+                    <button class="tab-trigger active" data-tab="passphrase">Memorable Passphrases</button>
+                    <button class="tab-trigger" data-tab="password">Random Passwords</button>
+                </div>
+
+                <!-- Passphrase Generator -->
+                <div class="tab-content active" id="passphrase">
+                    <div class="info-box">
+                        <h2>EFF Dice-Generated Passphrases</h2>
+                        <p class="text-muted">Using the official EFF Long Wordlist for maximum security</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="num-words">Number of Words: <span id="num-words-value">15</span></label>
+                        <div class="slider-container">
+                            <input type="range" id="num-words" min="4" max="30" value="15" class="slider">
+                            <input type="number" id="num-words-input" min="4" max="30" value="15" class="number-input">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="separator">Word Separator</label>
+                        <select id="separator" class="select">
+                            <option value="-">Hyphen (-)</option>
+                            <option value=" ">Space ( )</option>
+                            <option value="_">Underscore (_)</option>
+                            <option value=".">Period (.)</option>
+                        </select>
+                    </div>
+
+                    <button id="generate-passphrase" class="btn-3d">
+                        <span class="icon">🔄</span>
+                        Generate Passphrase
+                    </button>
+
+                    <div id="passphrase-result" class="result-box hidden">
+                        <div class="result-header">
+                            <label>Your Generated Passphrase</label>
+                            <button id="copy-passphrase" class="copy-btn">
+                                <span class="icon">📋</span>
+                            </button>
+                        </div>
+                        <input type="text" id="passphrase-output" readonly class="result-input">
+                        
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-header">
+                                    <span class="icon">🛡️</span>
+                                    <h3>Classical Entropy</h3>
+                                </div>
+                                <p class="stat-value" id="passphrase-entropy">0 bits</p>
+                                <p class="stat-label" id="passphrase-entropy-label">Weak</p>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-header">
+                                    <span class="icon">🔮</span>
+                                    <h3>Quantum Resistance</h3>
+                                </div>
+                                <p class="stat-value" id="passphrase-quantum">0 bits</p>
+                                <p class="stat-label" id="passphrase-quantum-label">Quantum Vulnerable</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Generator -->
+                <div class="tab-content" id="password">
+                    <div class="info-box">
+                        <h2>Random Character Passwords</h2>
+                        <p class="text-muted">Maximum entropy density for password managers</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="length">Password Length: <span id="length-value">32</span></label>
+                        <div class="slider-container">
+                            <input type="range" id="length" min="8" max="64" value="32" class="slider">
+                            <input type="number" id="length-input" min="8" max="64" value="32" class="number-input">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Character Types</label>
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="uppercase" checked>
+                                <label for="uppercase">Uppercase (A-Z)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="lowercase" checked>
+                                <label for="lowercase">Lowercase (a-z)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="numbers" checked>
+                                <label for="numbers">Numbers (0-9)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="symbols" checked>
+                                <label for="symbols">Symbols (!@#$...)</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="generate-password" class="btn-3d">
+                        <span class="icon">🔄</span>
+                        Generate Password
+                    </button>
+
+                    <div id="password-result" class="result-box hidden">
+                        <div class="result-header">
+                            <label>Your Generated Password</label>
+                            <button id="copy-password" class="copy-btn">
+                                <span class="icon">📋</span>
+                            </button>
+                        </div>
+                        <input type="text" id="password-output" readonly class="result-input">
+                        
+                        <div class="stats-grid">
+                            <div class="stat-box">
+                                <div class="stat-header">
+                                    <span class="icon">🛡️</span>
+                                    <h3>Classical Entropy</h3>
+                                </div>
+                                <p class="stat-value" id="password-entropy">0 bits</p>
+                                <p class="stat-label" id="password-entropy-label">Weak</p>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-header">
+                                    <span class="icon">🔮</span>
+                                    <h3>Quantum Resistance</h3>
+                                </div>
+                                <p class="stat-value" id="password-quantum">0 bits</p>
+                                <p class="stat-label" id="password-quantum-label">Quantum Vulnerable</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="eff-wordlist.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
