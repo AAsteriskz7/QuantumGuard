@@ -42,7 +42,11 @@ export default function Footer() {
             <p className="mb-2 text-sm text-muted-foreground">
               Based on EFF Dice-Generated Passphrase methodology for maximum security and memorability.
             </p>
-            <p className="text-sm font-medium text-teal-400">Coming Soon: Chrome Extension</p>
+            <p className="text-sm font-medium text-teal-400">
+              <Link href="https://chromewebstore.google.com/detail/quantumguard-password-gen/dfienhkgfmommaacngnkifnndcbllmlj" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-primary">
+                Chrome Extension
+              </Link>
+            </p>
           </div>
           <div>
             <h3 className="mb-4 text-lg font-semibold">Support</h3>
