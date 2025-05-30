@@ -370,8 +370,31 @@ copyPasswordBtn.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', async () => {
     initTheme();
     
-    // Check Pro status on load
-    await checkProStatus();
+    // Enable all Pro features for testing (remove this in production)
+    isProActive = true;
+    proFeatures = {
+        expandedWordlists: true,
+        patternGeneration: true,
+        mnemonicPhrases: true,
+        advancedRandomStrings: true,
+        savedPresets: true,
+        batchGeneration: true,
+        strengthVisualization: true,
+        generationStats: true,
+        customThemes: true
+    };
+    
+    // Store test Pro status
+    try {
+        await chrome.storage.local.set({
+            quantumGuardPro: true,
+            quantumGuardProFeatures: proFeatures
+        });
+    } catch (error) {
+        console.log('Could not set test Pro status:', error);
+    }
+    
+    updateProUI();
     
     // Setup Pro button
     const proButton = document.getElementById('pro-button');

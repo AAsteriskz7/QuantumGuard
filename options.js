@@ -3,13 +3,10 @@ const TEST_PRO_KEY = 'QUANTUMGUARD-TEST-PRO-2024';
 
 // DOM Elements
 const statusDiv = document.getElementById('pro-status');
-const statusTitle = document.getElementById('status-title');
-const statusDescription = document.getElementById('status-description');
-const messageArea = document.getElementById('message-area');
+const messageContainer = document.getElementById('message-container');
 const licenseKeyInput = document.getElementById('license-key');
 const activateBtn = document.getElementById('activate-btn');
 const deactivateBtn = document.getElementById('deactivate-btn');
-const proFeaturesDiv = document.getElementById('pro-features');
 
 // Pro features configuration
 const PRO_FEATURES = {
@@ -19,9 +16,9 @@ const PRO_FEATURES = {
     advancedRandomStrings: true,
     savedPresets: true,
     batchGeneration: true,
-    advancedStrengthViz: true,
+    strengthVisualization: true,
     generationStats: true,
-    premiumThemes: true,
+    customThemes: true,
 };
 
 // Initialize the options page
@@ -49,44 +46,62 @@ async function checkProStatus() {
         const result = await chrome.storage.local.get(['quantumGuardPro', 'quantumGuardProFeatures']);
         const isProActive = result.quantumGuardPro === true;
         
-        updateUI(isProActive);
-        
-        if (isProActive) {
-            console.log('Pro features:', result.quantumGuardProFeatures);
-        }
+        updateProStatus(isProActive);
     } catch (error) {
         console.error('Error checking Pro status:', error);
-        showMessage('Error checking Pro status', 'error');
+        updateProStatus(false);
     }
 }
 
-// Update the UI based on Pro status
-function updateUI(isProActive) {
-    if (isProActive) {
-        statusDiv.className = 'pro-status pro-active';
-        statusTitle.textContent = '✅ QuantumGuard Pro Active';
-        statusDescription.textContent = 'All premium features are unlocked';
+// Update Pro status display
+function updateProStatus(isActive) {
+    if (isActive) {
+        // Pro is active
+        statusDiv.className = 'pro-status active';
+        statusDiv.innerHTML = `
+            <h2>✅ Pro Active</h2>
+            <p>All premium features are enabled</p>
+        `;
         
         activateBtn.style.display = 'none';
         deactivateBtn.style.display = 'inline-block';
-        proFeaturesDiv.style.display = 'block';
-        
-        licenseKeyInput.value = '';
         licenseKeyInput.disabled = true;
+        
+        showMessage('Pro features are currently active!', 'success');
     } else {
-        statusDiv.className = 'pro-status pro-inactive';
-        statusTitle.textContent = '⚠️ QuantumGuard Free Version';
-        statusDescription.textContent = 'Activate Pro to unlock all features';
+        // Pro is inactive
+        statusDiv.className = 'pro-status inactive';
+        statusDiv.innerHTML = `
+            <h2>⚡ Pro Inactive</h2>
+            <p>Enter your license key to activate premium features</p>
+        `;
         
         activateBtn.style.display = 'inline-block';
         deactivateBtn.style.display = 'none';
-        proFeaturesDiv.style.display = 'none';
-        
         licenseKeyInput.disabled = false;
     }
 }
 
-// Activate Pro license
+// Show message to user
+function showMessage(text, type = 'success') {
+    if (!messageContainer) return;
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${type}`;
+    messageDiv.textContent = text;
+    
+    messageContainer.innerHTML = '';
+    messageContainer.appendChild(messageDiv);
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+        if (messageContainer.contains(messageDiv)) {
+            messageContainer.removeChild(messageDiv);
+        }
+    }, 5000);
+}
+
+// Activate Pro
 async function activatePro() {
     const licenseKey = licenseKeyInput.value.trim();
     
@@ -99,92 +114,66 @@ async function activatePro() {
     activateBtn.textContent = 'Activating...';
     
     try {
-        // Validate license key
-        const isValid = await validateLicenseKey(licenseKey);
-        
-        if (isValid) {
-            // Store Pro status and features
+        // Validate license key (for now, just check the test key)
+        if (licenseKey === TEST_PRO_KEY) {
+            // Store Pro status
             await chrome.storage.local.set({
                 quantumGuardPro: true,
                 quantumGuardProFeatures: PRO_FEATURES,
-                quantumGuardLicenseKey: licenseKey
+                quantumGuardProKey: licenseKey
             });
             
-            updateUI(true);
-            showMessage('✅ Pro license activated successfully!', 'success');
+            // Update UI
+            updateProStatus(true);
+            showMessage('Pro activated successfully!', 'success');
             
-            // Notify popup if it's open
-            notifyPopup();
+            // Notify popup about status change
+            try {
+                chrome.runtime.sendMessage({ type: 'PRO_STATUS_CHANGED' });
+            } catch (e) {
+                console.log('Could not notify popup:', e);
+            }
+            
         } else {
-            showMessage('❌ Invalid license key. Please check and try again.', 'error');
+            showMessage('Invalid license key. Please check and try again.', 'error');
         }
     } catch (error) {
         console.error('Error activating Pro:', error);
-        showMessage('Error activating Pro license', 'error');
+        showMessage('Error activating Pro. Please try again.', 'error');
     } finally {
         activateBtn.disabled = false;
         activateBtn.textContent = 'Activate Pro';
     }
 }
 
-// Deactivate Pro license
+// Deactivate Pro
 async function deactivatePro() {
-    if (!confirm('Are you sure you want to deactivate QuantumGuard Pro? You will lose access to all premium features.')) {
-        return;
-    }
-    
     deactivateBtn.disabled = true;
     deactivateBtn.textContent = 'Deactivating...';
     
     try {
-        // Remove Pro status and features
-        await chrome.storage.local.remove([
-            'quantumGuardPro', 
-            'quantumGuardProFeatures', 
-            'quantumGuardLicenseKey'
-        ]);
+        // Remove Pro status
+        await chrome.storage.local.remove(['quantumGuardPro', 'quantumGuardProFeatures', 'quantumGuardProKey']);
         
-        updateUI(false);
-        showMessage('Pro license deactivated', 'success');
+        // Update UI
+        updateProStatus(false);
+        licenseKeyInput.value = '';
+        showMessage('Pro deactivated successfully.', 'success');
         
-        // Notify popup if it's open
-        notifyPopup();
+        // Notify popup about status change
+        try {
+            chrome.runtime.sendMessage({ type: 'PRO_STATUS_CHANGED' });
+        } catch (e) {
+            console.log('Could not notify popup:', e);
+        }
+        
     } catch (error) {
         console.error('Error deactivating Pro:', error);
-        showMessage('Error deactivating Pro license', 'error');
+        showMessage('Error deactivating Pro. Please try again.', 'error');
     } finally {
         deactivateBtn.disabled = false;
         deactivateBtn.textContent = 'Deactivate Pro';
     }
-}
-
-// Validate license key (placeholder - replace with actual validation)
-async function validateLicenseKey(key) {
-    // For now, just check against test key
-    // Later this will validate with Lemon Squeezy API
-    return key === TEST_PRO_KEY;
-}
-
-// Show message to user
-function showMessage(text, type) {
-    messageArea.innerHTML = `<div class="message ${type}">${text}</div>`;
-    
-    // Auto-hide success messages
-    if (type === 'success') {
-        setTimeout(() => {
-            messageArea.innerHTML = '';
-        }, 3000);
-    }
-}
-
-// Notify popup about Pro status change
-function notifyPopup() {
-    // Send message to popup if it's open
-    chrome.runtime.sendMessage({
-        type: 'PRO_STATUS_CHANGED'
-    }).catch(() => {
-        // Popup might not be open, that's fine
-    });
 }
 
 // Listen for messages from popup

@@ -4,205 +4,417 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QuantumGuard Pro Settings</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
+        :root {
+            --background: #ffffff;
+            --foreground: #1a1a1a;
+            --primary: #3b82f6;
+            --secondary: #14b8a6;
+            --accent: #6366f1;
+            --border: #e5e7eb;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --muted: #6b7280;
+            --gradient-primary: linear-gradient(135deg, #3b82f6, #14b8a6);
+            --gradient-secondary: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
+        [data-theme="dark"] {
+            --background: #0f172a;
+            --foreground: #f8fafc;
+            --primary: #60a5fa;
+            --secondary: #34d399;
+            --accent: #a78bfa;
+            --border: #1e293b;
+            --card-bg: rgba(30, 41, 59, 0.95);
+            --muted: #94a3b8;
+            --gradient-primary: linear-gradient(135deg, #60a5fa, #34d399);
+            --gradient-secondary: linear-gradient(135deg, #a78bfa, #c084fc);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-            max-width: 600px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: var(--gradient-primary);
+            min-height: 100vh;
+            color: var(--foreground);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background blobs */
+        body::before,
+        body::after {
+            content: '';
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.3;
+            z-index: -1;
+            animation: float 20s ease-in-out infinite alternate;
+        }
+
+        body::before {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.4), transparent);
+            top: -50px;
+            right: -50px;
+        }
+
+        body::after {
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.4), transparent);
+            bottom: -50px;
+            left: -50px;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        .container {
+            max-width: 800px;
             margin: 40px auto;
             padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
         }
-        .container {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.1),
+                0 8px 20px rgba(59, 130, 246, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
         }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            opacity: 0.7;
+        }
+
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
+
         .header h1 {
-            color: #667eea;
-            margin: 0;
-            font-size: 2rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
+
         .header p {
-            color: #666;
-            margin: 10px 0 0 0;
+            color: var(--muted);
+            font-size: 1.1rem;
         }
+
         .pro-status {
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 32px;
             text-align: center;
+            border: 2px solid var(--border);
+            transition: all 0.3s ease;
         }
-        .pro-active {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
+
+        .pro-status.active {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            border-color: #10b981;
+            color: var(--foreground);
         }
-        .pro-inactive {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
+
+        .pro-status.inactive {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1));
+            border-color: #f59e0b;
+            color: var(--foreground);
         }
+
+        .pro-status h2 {
+            margin-bottom: 12px;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .license-section {
+            margin-bottom: 32px;
+        }
+
+        .license-section h3 {
+            color: var(--primary);
+            margin-bottom: 16px;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: #374151;
+            color: var(--foreground);
         }
+
         .form-group input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 6px;
-            font-size: 16px;
-            transition: border-color 0.2s;
-            box-sizing: border-box;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--foreground);
+            transition: all 0.3s ease;
         }
+
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
-        .btn {
-            padding: 12px 24px;
+
+        .button {
+            background: var(--gradient-primary);
+            color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
-            margin-right: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            min-width: 120px;
         }
-        .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+
+        .button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .button:hover::before {
+            left: 100%;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .button:active {
+            transform: translateY(0);
+        }
+
+        .button.secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .button.secondary:hover {
+            background: var(--primary);
             color: white;
         }
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+
+        .button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
-        .btn-danger {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-        }
-        .btn-danger:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
-        }
+
         .features-list {
-            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin: 24px 0;
         }
+
         .feature-item {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            padding: 8px 0;
-            border-bottom: 1px solid #f3f4f6;
+            gap: 12px;
         }
-        .feature-item:last-child {
-            border-bottom: none;
+
+        .feature-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.1);
+            border-color: var(--primary);
         }
+
         .feature-icon {
-            margin-right: 12px;
-            font-size: 18px;
+            font-size: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
+
         .message {
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+            font-weight: 500;
             text-align: center;
         }
-        .success {
-            background: #d1fae5;
-            color: #065f46;
+
+        .message.success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+            color: #059669;
             border: 1px solid #10b981;
         }
-        .error {
-            background: #fee2e2;
-            color: #991b1b;
+
+        .message.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+            color: #dc2626;
             border: 1px solid #ef4444;
         }
-        .test-key-hint {
-            background: #fef3c7;
-            border: 1px solid #f59e0b;
-            color: #92400e;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
+
+        .buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                margin: 20px auto;
+                padding: 16px;
+            }
+
+            .card {
+                padding: 24px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>QuantumGuard Pro</h1>
-            <p>Manage your Pro license and features</p>
-        </div>
+        <div class="card">
+            <div class="header">
+                <h1>QuantumGuard Pro</h1>
+                <p>Manage your Pro license and features</p>
+            </div>
 
-        <div id="pro-status" class="pro-status">
-            <h3 id="status-title">Checking Pro Status...</h3>
-            <p id="status-description">Please wait while we verify your license</p>
-        </div>
+            <div id="pro-status" class="pro-status inactive">
+                <h2>Checking Pro Status...</h2>
+                <p>Please wait while we verify your license</p>
+            </div>
 
-        <div id="message-area"></div>
+            <div class="license-section">
+                <h3>Pro License Key</h3>
+                <div class="form-group">
+                    <input type="text" id="license-key" placeholder="Enter your QuantumGuard Pro license key">
+                </div>
+                <div class="message" id="test-key-hint" style="background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(217, 119, 6, 0.1)); color: #d97706; border: 1px solid #f59e0b;">
+                    <strong>For testing:</strong> Use key <code style="background: rgba(0,0,0,0.1); padding: 2px 6px; border-radius: 4px; font-family: monospace;">QUANTUMGUARD-TEST-PRO-2024</code>
+                </div>
+            </div>
 
-        <div class="test-key-hint">
-            <strong>💡 Test Key:</strong> Use "QUANTUMGUARD-TEST-PRO-2024" to activate Pro features for testing
-        </div>
+            <div class="buttons">
+                <button id="activate-btn" class="button">Activate Pro</button>
+                <button id="deactivate-btn" class="button secondary" style="display: none;">Deactivate Pro</button>
+            </div>
 
-        <div class="form-group">
-            <label for="license-key">Pro License Key:</label>
-            <input type="text" id="license-key" placeholder="Enter your QuantumGuard Pro license key">
-        </div>
+            <div id="message-container"></div>
 
-        <div>
-            <button id="activate-btn" class="btn btn-primary">Activate Pro</button>
-            <button id="deactivate-btn" class="btn btn-danger" style="display: none;">Deactivate Pro</button>
-        </div>
-
-        <div id="pro-features" class="features-list" style="display: none;">
-            <h3>Pro Features Active:</h3>
-            <div class="feature-item">
-                <span class="feature-icon">📚</span>
-                <span>Expanded Wordlist Universe</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">🎯</span>
-                <span>Pattern-Based Passphrase Generation</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">🔐</span>
-                <span>Specialized Mnemonic Phrase Generator</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">⚙️</span>
-                <span>Advanced Random String Controls</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">💾</span>
-                <span>Saved Generation Presets/Templates</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">📊</span>
-                <span>Batch Generation & Advanced Export</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">📈</span>
-                <span>Advanced Password Strength Visualization</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">📋</span>
-                <span>Privacy-Preserving Local Generation Statistics</span>
-            </div>
-            <div class="feature-item">
-                <span class="feature-icon">🎨</span>
-                <span>Premium UI Themes & Customization</span>
+            <div class="license-section">
+                <h3>Pro Features</h3>
+                <div class="features-list">
+                    <div class="feature-item">
+                        <div class="feature-icon">📚</div>
+                        <span>Expanded Wordlist Universe</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎯</div>
+                        <span>Pattern-Based Passphrase Generation</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🔐</div>
+                        <span>Specialized Mnemonic Phrase Generator</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">⚙️</div>
+                        <span>Advanced Random String Controls</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">💾</div>
+                        <span>Saved Generation Presets/Templates</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📊</div>
+                        <span>Batch Generation & Advanced Export</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🛡️</div>
+                        <span>Advanced Password Strength Visualization</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">📈</div>
+                        <span>Privacy-Preserving Local Generation Statistics</span>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">🎨</div>
+                        <span>Premium UI Themes & Customization</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
