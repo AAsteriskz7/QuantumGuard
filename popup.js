@@ -95,11 +95,26 @@ function toggleProFeatures() {
     if (patternSection) {
         patternSection.style.display = (isProActive && proFeatures.patternGeneration) ? 'block' : 'none';
     }
+
+    // Mnemonic generation
+    const mnemonicSection = document.getElementById('mnemonic-section');
+    if (mnemonicSection) {
+        mnemonicSection.style.display = (isProActive && proFeatures.mnemonicPhrases) ? 'block' : 'none';
+    }
     
     // Advanced options
     const advancedSection = document.getElementById('advanced-section');
     if (advancedSection) {
         advancedSection.style.display = (isProActive && proFeatures.advancedRandomStrings) ? 'block' : 'none';
+    }
+
+    // Update Pro feature sections styling
+    if (isProActive) {
+        document.querySelectorAll('.pro-feature-section').forEach(section => {
+            if (section.style.display === 'block') {
+                section.classList.add('active');
+            }
+        });
     }
 }
 
@@ -326,7 +341,135 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Generate initial passphrase
     generatePassphrase();
+
+    // Pro Feature Event Listeners
+    setupProFeatureListeners();
 });
+
+// Setup Pro feature event listeners
+function setupProFeatureListeners() {
+    // Pattern generation
+    const patternSelect = document.getElementById('pattern-select');
+    const generatePatternBtn = document.getElementById('generate-pattern');
+    
+    if (patternSelect) {
+        patternSelect.addEventListener('change', function() {
+            if (this.value && isProActive) {
+                generatePatternBtn.style.display = 'block';
+                generatePatternPassphrase();
+            } else {
+                generatePatternBtn.style.display = 'none';
+            }
+        });
+    }
+    
+    if (generatePatternBtn) {
+        generatePatternBtn.addEventListener('click', generatePatternPassphrase);
+    }
+
+    // Mnemonic generation
+    const generateMnemonicBtn = document.getElementById('generate-mnemonic');
+    if (generateMnemonicBtn) {
+        generateMnemonicBtn.addEventListener('click', generateMnemonicPhrase);
+    }
+
+    // Advanced wordlist selection
+    const wordlistSelect = document.getElementById('wordlist-select');
+    if (wordlistSelect) {
+        wordlistSelect.addEventListener('change', function() {
+            if (isProActive) {
+                generatePassphrase();
+            }
+        });
+    }
+
+    // Advanced password options
+    const excludeSimilar = document.getElementById('exclude-similar');
+    const excludeAmbiguous = document.getElementById('exclude-ambiguous');
+    const customChars = document.getElementById('custom-chars');
+    
+    if (excludeSimilar) {
+        excludeSimilar.addEventListener('change', function() {
+            if (isProActive) generatePassword();
+        });
+    }
+    
+    if (excludeAmbiguous) {
+        excludeAmbiguous.addEventListener('change', function() {
+            if (isProActive) generatePassword();
+        });
+    }
+    
+    if (customChars) {
+        customChars.addEventListener('input', function() {
+            if (isProActive && this.value) generatePassword();
+        });
+    }
+}
+
+// Pro Feature: Generate pattern-based passphrase
+function generatePatternPassphrase() {
+    if (!isProActive) return;
+    
+    const patternSelect = document.getElementById('pattern-select');
+    const pattern = patternSelect.value;
+    
+    if (!pattern || !window.generateFromPattern) return;
+    
+    const separator = separatorSelect.value;
+    const result = window.generateFromPattern(pattern, separator);
+    
+    passphraseOutput.value = result;
+    
+    // Calculate entropy (rough estimate for patterns)
+    const parts = pattern.split('-').length;
+    const entropy = parts * 10; // Rough estimate
+    const quantumResistance = entropy / 2;
+    
+    // Update stats
+    passphraseEntropy.textContent = `${entropy.toFixed(1)} bits`;
+    passphraseEntropyLabel.textContent = getEntropyDescription(entropy);
+    passphraseEntropy.className = `stat-value ${getEntropyColor(entropy)}`;
+    
+    passphraseQuantum.textContent = `${quantumResistance.toFixed(1)} bits`;
+    passphraseQuantumLabel.textContent = getQuantumResistanceLabel(quantumResistance);
+    passphraseQuantum.className = `stat-value ${getEntropyColor(quantumResistance)}`;
+    
+    // Show result
+    passphraseResult.classList.remove('hidden');
+    copyPassphraseBtn.style.display = 'block';
+}
+
+// Pro Feature: Generate mnemonic phrase
+function generateMnemonicPhrase() {
+    if (!isProActive) return;
+    
+    const mnemonicWordsSelect = document.getElementById('mnemonic-words');
+    const wordCount = parseInt(mnemonicWordsSelect.value);
+    
+    if (!window.generateMnemonic) return;
+    
+    const result = window.generateMnemonic(wordCount);
+    
+    passphraseOutput.value = result;
+    
+    // Calculate entropy for BIP-39
+    const entropy = wordCount * Math.log2(2048); // BIP-39 uses 2048 words
+    const quantumResistance = entropy / 2;
+    
+    // Update stats
+    passphraseEntropy.textContent = `${entropy.toFixed(1)} bits`;
+    passphraseEntropyLabel.textContent = getEntropyDescription(entropy);
+    passphraseEntropy.className = `stat-value ${getEntropyColor(entropy)}`;
+    
+    passphraseQuantum.textContent = `${quantumResistance.toFixed(1)} bits`;
+    passphraseQuantumLabel.textContent = getQuantumResistanceLabel(quantumResistance);
+    passphraseQuantum.className = `stat-value ${getEntropyColor(quantumResistance)}`;
+    
+    // Show result
+    passphraseResult.classList.remove('hidden');
+    copyPassphraseBtn.style.display = 'block';
+}
 
 // Listen for Pro status changes from options page
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

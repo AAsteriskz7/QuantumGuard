@@ -218,6 +218,31 @@
                         Generate Password
                     </button>
 
+                    <!-- Pro Feature: Advanced Options -->
+                    <div id="advanced-section" class="pro-feature-section" style="display: none;">
+                        <div class="pro-feature-title">
+                            <span class="material-icons">tune</span>
+                            Advanced Options
+                            <span class="pro-badge">Pro</span>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="exclude-similar"> 
+                                Exclude similar characters (0, O, l, 1, I)
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="exclude-ambiguous"> 
+                                Exclude ambiguous characters ({ } [ ] ( ) / \ ' " ` ~ , ; . < >)
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label for="custom-chars">Custom Character Set</label>
+                            <input type="text" id="custom-chars" class="select" placeholder="Enter custom characters">
+                        </div>
+                    </div>
+
                     <div id="password-result" class="result-box hidden">
                         <div class="result-header">
                             <label for="password-output">Your Generated Password</label>
