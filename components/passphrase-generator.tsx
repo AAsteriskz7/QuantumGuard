@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -9,6 +9,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Copy, Check, RefreshCw, Shield, HelpCircle } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 import { effWordList, ENTROPY_PER_WORD } from "@/lib/eff-wordlist"
+import { WordlistSelector } from "@/components/wordlist-selector"
+import { usePro } from "@/lib/pro-context"
 
 export default function PassphraseGenerator() {
   const [numWords, setNumWords] = useState<number>(15)
@@ -18,6 +20,13 @@ export default function PassphraseGenerator() {
   const [quantumEntropy, setQuantumEntropy] = useState<number>(0)
   const [copied, setCopied] = useState<boolean>(false)
   const [isGenerating, setIsGenerating] = useState<boolean>(false)
+  const [selectedWordlist, setSelectedWordlist] = useState<string>("effLong")
+  const [isMounted, setIsMounted] = useState(false)
+  const { isProActive } = usePro()
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   const generatePassphrase = () => {
     setIsGenerating(true)
@@ -26,21 +35,39 @@ export default function PassphraseGenerator() {
     setTimeout(() => {
       try {
         const selectedWords: string[] = []
+        let wordlist: string[] = []
 
-        // Select random words from the EFF wordlist
+        // Get the appropriate wordlist
+        if (selectedWordlist === "effLong") {
+          wordlist = effWordList
+        } else if (selectedWordlist.startsWith("customWordlist_") && isMounted) {
+          const stored = localStorage.getItem(selectedWordlist)
+          if (stored) {
+            wordlist = JSON.parse(stored)
+          } else {
+            wordlist = effWordList // Fallback to EFF list
+          }
+        } else {
+          // For now, fallback to EFF list for other Pro wordlists
+          // These would be imported from actual files later
+          wordlist = effWordList
+        }
+
+        // Select random words from the wordlist
         for (let i = 0; i < numWords; i++) {
           const randomIndex = Math.floor(
-            (crypto.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1)) * effWordList.length,
+            (crypto.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1)) * wordlist.length,
           )
-          selectedWords.push(effWordList[randomIndex])
+          selectedWords.push(wordlist[randomIndex])
         }
 
         // Join words with the selected separator
         const newPassphrase = selectedWords.join(separator)
         setPassphrase(newPassphrase)
 
-        // Calculate entropy only when passphrase is generated
-        const calculatedEntropy = ENTROPY_PER_WORD * numWords
+        // Calculate entropy based on wordlist size
+        const bitsPerWord = Math.log2(wordlist.length)
+        const calculatedEntropy = bitsPerWord * numWords
         setEntropy(calculatedEntropy)
         setQuantumEntropy(calculatedEntropy / 2)
       } catch (error) {
@@ -120,6 +147,8 @@ export default function PassphraseGenerator() {
               />
             </div>
           </div>
+
+          <WordlistSelector onSelect={setSelectedWordlist} />
 
           <div className="space-y-2">
             <Label htmlFor="separator">Word Separator</Label>

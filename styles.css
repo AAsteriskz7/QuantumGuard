@@ -504,4 +504,127 @@ label {
 
 [data-theme="dark"] .theme-toggle .icon {
     content: "☀️";
+}
+
+/* Pro Features Styles */
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.pro-button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+}
+
+.pro-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4);
+}
+
+.pro-button .material-icons {
+    font-size: 14px;
+}
+
+.pro-button.pro-active {
+    background: linear-gradient(135deg, #10b981, #059669);
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.3);
+}
+
+.pro-button.pro-active:hover {
+    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.4);
+}
+
+.header-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.pro-indicator {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.pro-indicator.pro-active {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
+}
+
+.pro-indicator.pro-inactive {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    box-shadow: 0 1px 3px rgba(245, 158, 11, 0.3);
+}
+
+/* Pro Feature Sections */
+.pro-feature-section {
+    margin-top: 16px;
+    padding: 12px;
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    background: var(--card-bg);
+    opacity: 0.7;
+}
+
+.pro-feature-section.active {
+    opacity: 1;
+    border-style: solid;
+    border-color: var(--primary);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+}
+
+.pro-feature-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 8px;
+}
+
+.pro-badge {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white;
+    font-size: 9px;
+    font-weight: 500;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Responsive adjustments for Pro elements */
+@media (max-width: 400px) {
+    .pro-button .pro-text {
+        display: none;
+    }
+    
+    .header-bottom {
+        flex-direction: column;
+        gap: 4px;
+        align-items: flex-start;
+    }
+    
+    .pro-indicator {
+        align-self: flex-end;
+    }
 } 

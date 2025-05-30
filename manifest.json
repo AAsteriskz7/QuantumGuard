@@ -15,6 +15,7 @@
       "128": "logo.png"
     }
   },
+  "options_page": "options.html",
   "icons": {
     "16": "logo.png",
     "48": "logo.png",

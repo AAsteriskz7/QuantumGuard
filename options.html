@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuantumGuard Pro Settings</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #667eea;
+            margin: 0;
+            font-size: 2rem;
+        }
+        .header p {
+            color: #666;
+            margin: 10px 0 0 0;
+        }
+        .pro-status {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .pro-active {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+        .pro-inactive {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: white;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #374151;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 10px;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+        .btn-danger:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+        .features-list {
+            margin-top: 20px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        .feature-item:last-child {
+            border-bottom: none;
+        }
+        .feature-icon {
+            margin-right: 12px;
+            font-size: 18px;
+        }
+        .message {
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+        .test-key-hint {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            color: #92400e;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>QuantumGuard Pro</h1>
+            <p>Manage your Pro license and features</p>
+        </div>
+
+        <div id="pro-status" class="pro-status">
+            <h3 id="status-title">Checking Pro Status...</h3>
+            <p id="status-description">Please wait while we verify your license</p>
+        </div>
+
+        <div id="message-area"></div>
+
+        <div class="test-key-hint">
+            <strong>💡 Test Key:</strong> Use "QUANTUMGUARD-TEST-PRO-2024" to activate Pro features for testing
+        </div>
+
+        <div class="form-group">
+            <label for="license-key">Pro License Key:</label>
+            <input type="text" id="license-key" placeholder="Enter your QuantumGuard Pro license key">
+        </div>
+
+        <div>
+            <button id="activate-btn" class="btn btn-primary">Activate Pro</button>
+            <button id="deactivate-btn" class="btn btn-danger" style="display: none;">Deactivate Pro</button>
+        </div>
+
+        <div id="pro-features" class="features-list" style="display: none;">
+            <h3>Pro Features Active:</h3>
+            <div class="feature-item">
+                <span class="feature-icon">📚</span>
+                <span>Expanded Wordlist Universe</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🎯</span>
+                <span>Pattern-Based Passphrase Generation</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🔐</span>
+                <span>Specialized Mnemonic Phrase Generator</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">⚙️</span>
+                <span>Advanced Random String Controls</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">💾</span>
+                <span>Saved Generation Presets/Templates</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">📊</span>
+                <span>Batch Generation & Advanced Export</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">📈</span>
+                <span>Advanced Password Strength Visualization</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">📋</span>
+                <span>Privacy-Preserving Local Generation Statistics</span>
+            </div>
+            <div class="feature-item">
+                <span class="feature-icon">🎨</span>
+                <span>Premium UI Themes & Customization</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="options.js"></script>
+</body>
+</html> 

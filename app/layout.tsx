@@ -6,6 +6,7 @@ import "./globals.css"
 import Header from "@/components/header"
 import Footer from "@/components/footer"
 import { ThemeProvider } from "@/components/theme-provider"
+import { ProProvider } from "@/lib/pro-context"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -24,17 +25,19 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
-          <div className="relative min-h-screen bg-background">
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="blob-1"></div>
-              <div className="blob-2"></div>
-              <div className="blob-3"></div>
+          <ProProvider>
+            <div className="relative min-h-screen bg-background">
+              <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                <div className="blob-1"></div>
+                <div className="blob-2"></div>
+                <div className="blob-3"></div>
+              </div>
+              <Header />
+              <main className="container relative z-10 px-4 mx-auto">{children}</main>
+              <Footer />
+              <Analytics />
             </div>
-            <Header />
-            <main className="container relative z-10 px-4 mx-auto">{children}</main>
-            <Footer />
-            <Analytics />
-          </div>
+          </ProProvider>
         </ThemeProvider>
       </body>
     </html>

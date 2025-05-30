@@ -4,6 +4,11 @@ const UPPERCASE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const LOWERCASE_CHARS = "abcdefghijklmnopqrstuvwxyz";
 const NUMBER_CHARS = "0123456789";
 const SYMBOL_CHARS = "!@#$%^&*()_+-=[]{}|;':\",./<>?";
+const TEST_PRO_KEY = 'QUANTUMGUARD-TEST-PRO-2024';
+
+// Pro status variables
+let isProActive = false;
+let proFeatures = {};
 
 // Helper Functions
 function calculateQuantumResistance(entropy) {
@@ -34,6 +39,72 @@ function getQuantumResistanceLabel(bits) {
     if (bits < 80) return "Quantum Robust";
     if (bits < 100) return "Quantum Excellent";
     return "Quantum Maximum";
+}
+
+// Pro Features Functions
+async function checkProStatus() {
+    try {
+        const result = await chrome.storage.local.get(['quantumGuardPro', 'quantumGuardProFeatures']);
+        isProActive = result.quantumGuardPro === true;
+        proFeatures = result.quantumGuardProFeatures || {};
+        
+        updateProUI();
+        return isProActive;
+    } catch (error) {
+        console.error('Error checking Pro status:', error);
+        return false;
+    }
+}
+
+function updateProUI() {
+    // Update Pro status indicator
+    const proIndicator = document.getElementById('pro-indicator');
+    const proButton = document.getElementById('pro-button');
+    
+    if (isProActive) {
+        if (proIndicator) {
+            proIndicator.textContent = '✅ Pro Active';
+            proIndicator.className = 'pro-indicator pro-active';
+        }
+        if (proButton) {
+            proButton.textContent = 'Manage Pro';
+        }
+    } else {
+        if (proIndicator) {
+            proIndicator.textContent = '⚡ Upgrade to Pro';
+            proIndicator.className = 'pro-indicator pro-inactive';
+        }
+        if (proButton) {
+            proButton.textContent = 'Get Pro';
+        }
+    }
+    
+    // Show/hide Pro features
+    toggleProFeatures();
+}
+
+function toggleProFeatures() {
+    // Advanced wordlist options
+    const advancedWordlistSection = document.getElementById('advanced-wordlist-section');
+    if (advancedWordlistSection) {
+        advancedWordlistSection.style.display = (isProActive && proFeatures.expandedWordlists) ? 'block' : 'none';
+    }
+    
+    // Pattern generation
+    const patternSection = document.getElementById('pattern-section');
+    if (patternSection) {
+        patternSection.style.display = (isProActive && proFeatures.patternGeneration) ? 'block' : 'none';
+    }
+    
+    // Advanced options
+    const advancedSection = document.getElementById('advanced-section');
+    if (advancedSection) {
+        advancedSection.style.display = (isProActive && proFeatures.advancedRandomStrings) ? 'block' : 'none';
+    }
+}
+
+function openProSettings() {
+    chrome.runtime.openOptionsPage();
 }
 
 // DOM Elements
@@ -210,8 +281,17 @@ copyPasswordBtn.addEventListener('click', () => {
 });
 
 // Add event listeners for sliders
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     initTheme();
+    
+    // Check Pro status on load
+    await checkProStatus();
+    
+    // Setup Pro button
+    const proButton = document.getElementById('pro-button');
+    if (proButton) {
+        proButton.addEventListener('click', openProSettings);
+    }
     
     // Add slider event listeners
     numWordsSlider.addEventListener('input', function() {
@@ -246,4 +326,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Generate initial passphrase
     generatePassphrase();
+});
+
+// Listen for Pro status changes from options page
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.type === 'PRO_STATUS_CHANGED') {
+        checkProStatus();
+    }
 }); 
