@@ -79,6 +79,73 @@
                         Generate Passphrase
                     </button>
 
+                    <!-- Pro Feature: Advanced Wordlist Selection -->
+                    <div id="advanced-wordlist-section" class="pro-feature-section" style="display: none;">
+                        <div class="pro-feature-title">
+                            <span class="material-icons">library_books</span>
+                            Advanced Wordlists
+                            <span class="pro-badge">Pro</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="wordlist-select">Wordlist</label>
+                            <select id="wordlist-select" class="select">
+                                <option value="eff">EFF Long (Default)</option>
+                                <option value="tech">Technology Terms</option>
+                                <option value="nature">Nature Words</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Pro Feature: Pattern Generation -->
+                    <div id="pattern-section" class="pro-feature-section" style="display: none;">
+                        <div class="pro-feature-title">
+                            <span class="material-icons">pattern</span>
+                            Pattern Generation
+                            <span class="pro-badge">Pro</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="pattern-select">Pattern</label>
+                            <select id="pattern-select" class="select">
+                                <option value="">None</option>
+                                <option value="adj-noun-verb">Adjective-Noun-Verb</option>
+                                <option value="noun-verb-noun">Noun-Verb-Noun</option>
+                                <option value="adj-noun-num">Adjective-Noun-Number</option>
+                                <option value="tech-noun-verb">Tech-Noun-Verb</option>
+                                <option value="nature-adj-noun">Nature-Adjective-Noun</option>
+                            </select>
+                        </div>
+                        <button id="generate-pattern" class="btn-3d" style="display: none;">
+                            <span class="material-icons">auto_awesome</span>
+                            Generate from Pattern
+                        </button>
+                    </div>
+
+                    <!-- Pro Feature: Mnemonic Generation -->
+                    <div id="mnemonic-section" class="pro-feature-section" style="display: none;">
+                        <div class="pro-feature-title">
+                            <span class="material-icons">key</span>
+                            BIP-39 Mnemonic
+                            <span class="pro-badge">Pro</span>
+                        </div>
+                        <div class="form-group">
+                            <label for="mnemonic-words">Word Count</label>
+                            <select id="mnemonic-words" class="select">
+                                <option value="12">12 words</option>
+                                <option value="15">15 words</option>
+                                <option value="18">18 words</option>
+                                <option value="21">21 words</option>
+                                <option value="24">24 words</option>
+                            </select>
+                        </div>
+                        <button id="generate-mnemonic" class="btn-3d">
+                            <span class="material-icons">security</span>
+                            Generate Mnemonic
+                        </button>
+                        <div class="info-box" style="margin-top: 12px; font-size: 12px;">
+                            <p class="text-muted">⚠️ For cryptocurrency wallets only. Store securely offline.</p>
+                        </div>
+                    </div>
+
                     <div id="passphrase-result" class="result-box hidden">
                         <div class="result-header">
                             <label for="passphrase-output">Your Generated Passphrase</label>
