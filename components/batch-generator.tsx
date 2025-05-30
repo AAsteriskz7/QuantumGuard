@@ -240,7 +240,7 @@ export function BatchGenerator() {
                   <Checkbox
                     id="batch-uppercase"
                     checked={includeUppercase}
-                    onCheckedChange={setIncludeUppercase}
+                    onCheckedChange={(checked) => setIncludeUppercase(checked === true)}
                   />
                   <Label htmlFor="batch-uppercase">Uppercase</Label>
                 </div>
@@ -248,7 +248,7 @@ export function BatchGenerator() {
                   <Checkbox
                     id="batch-lowercase"
                     checked={includeLowercase}
-                    onCheckedChange={setIncludeLowercase}
+                    onCheckedChange={(checked) => setIncludeLowercase(checked === true)}
                   />
                   <Label htmlFor="batch-lowercase">Lowercase</Label>
                 </div>
@@ -256,7 +256,7 @@ export function BatchGenerator() {
                   <Checkbox
                     id="batch-numbers"
                     checked={includeNumbers}
-                    onCheckedChange={setIncludeNumbers}
+                    onCheckedChange={(checked) => setIncludeNumbers(checked === true)}
                   />
                   <Label htmlFor="batch-numbers">Numbers</Label>
                 </div>
@@ -264,7 +264,7 @@ export function BatchGenerator() {
                   <Checkbox
                     id="batch-symbols"
                     checked={includeSymbols}
-                    onCheckedChange={setIncludeSymbols}
+                    onCheckedChange={(checked) => setIncludeSymbols(checked === true)}
                   />
                   <Label htmlFor="batch-symbols">Symbols</Label>
                 </div>
