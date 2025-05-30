@@ -63,27 +63,29 @@ function updateProUI() {
     
     if (isProActive) {
         if (proIndicator) {
-            proIndicator.textContent = '✅ Pro Active';
+            proIndicator.textContent = '✅ Pro';
             proIndicator.className = 'pro-indicator pro-active';
         }
         if (proButton) {
-            proButton.textContent = 'Manage Pro';
+            proButton.className = 'pro-button pro-active';
+            proButton.setAttribute('aria-label', 'Manage Pro');
         }
     } else {
         if (proIndicator) {
-            proIndicator.textContent = '⚡ Upgrade to Pro';
+            proIndicator.textContent = '⚡ Pro';
             proIndicator.className = 'pro-indicator pro-inactive';
         }
         if (proButton) {
-            proButton.textContent = 'Get Pro';
+            proButton.className = 'pro-button';
+            proButton.setAttribute('aria-label', 'Upgrade to Pro');
         }
     }
     
-    // Show/hide Pro features
-    toggleProFeatures();
+    // Show/hide Pro feature sections
+    updateProFeatureSections();
 }
 
-function toggleProFeatures() {
+function updateProFeatureSections() {
     // Advanced wordlist options
     const advancedWordlistSection = document.getElementById('advanced-wordlist-section');
     if (advancedWordlistSection) {
@@ -164,13 +166,22 @@ const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 // Initialize theme
 function initTheme() {
     const savedTheme = localStorage.getItem('theme');
+    let currentTheme;
+    
     if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        themeToggle.querySelector('.material-icons').textContent = savedTheme === 'dark' ? 'light_mode' : 'dark_mode';
+        currentTheme = savedTheme;
     } else {
-        const systemTheme = prefersDark.matches ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', systemTheme);
-        themeToggle.querySelector('.material-icons').textContent = systemTheme === 'dark' ? 'light_mode' : 'dark_mode';
+        currentTheme = prefersDark.matches ? 'dark' : 'light';
+    }
+    
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeIcon(currentTheme);
+}
+
+function updateThemeIcon(theme) {
+    const icon = themeToggle.querySelector('.material-icons');
+    if (icon) {
+        icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
     }
 }
 
@@ -178,9 +189,19 @@ function initTheme() {
 themeToggle.addEventListener('click', () => {
     const currentTheme = document.documentElement.getAttribute('data-theme');
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
     document.documentElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
-    themeToggle.querySelector('.material-icons').textContent = newTheme === 'dark' ? 'light_mode' : 'dark_mode';
+    updateThemeIcon(newTheme);
+});
+
+// Listen for system theme changes
+prefersDark.addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+        const newTheme = e.matches ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        updateThemeIcon(newTheme);
+    }
 });
 
 // Tab Switching
@@ -328,6 +349,14 @@ function copyToClipboard(text, button) {
 // Event Listeners
 generatePassphraseBtn.addEventListener('click', generatePassphrase);
 generatePasswordBtn.addEventListener('click', generatePassword);
+
+// Pro button handler
+const proButton = document.getElementById('pro-button');
+if (proButton) {
+    proButton.addEventListener('click', () => {
+        chrome.runtime.openOptionsPage();
+    });
+}
 
 copyPassphraseBtn.addEventListener('click', () => {
     copyToClipboard(passphraseOutput.value, copyPassphraseBtn);

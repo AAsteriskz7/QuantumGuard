@@ -60,7 +60,7 @@ const NATURE_WORDS = [
 
 // Export all wordlists
 window.WORDLISTS = {
-  eff: effWordList, // From eff-wordlist.js
+  eff: typeof effWordList !== 'undefined' ? effWordList : [], // From eff-wordlist.js
   bip39: BIP39_WORDLIST,
   adjectives: ADJECTIVES,
   nouns: NOUNS,
@@ -98,7 +98,7 @@ window.generateFromPattern = function(pattern, separator = " ") {
         const symbols = "!@#$%^&*+=?";
         return symbols[Math.floor(Math.random() * symbols.length)];
       default:
-        wordlist = effWordList; // Default to EFF list
+        wordlist = typeof effWordList !== 'undefined' ? effWordList : TECH_WORDS; // Default fallback
     }
     
     if (!wordlist || wordlist.length === 0) return part;

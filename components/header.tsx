@@ -37,6 +37,9 @@ export default function Header() {
           <Link href="/faq" className="text-sm font-medium transition-colors hover:text-primary">
             FAQ
           </Link>
+          <Link href="/pro" className="text-sm font-medium transition-colors hover:text-primary text-amber-500">
+            ⭐ Pro
+          </Link>
           <Button asChild className="bg-teal-500 hover:bg-teal-600">
             <Link href="/generator">Create Passphrase</Link>
           </Button>
@@ -84,6 +87,13 @@ export default function Header() {
               onClick={() => setIsMenuOpen(false)}
             >
               FAQ
+            </Link>
+            <Link
+              href="/pro"
+              className="text-sm font-medium transition-colors hover:text-primary text-amber-500"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              ⭐ Pro
             </Link>
             <Button asChild className="w-full bg-teal-500 hover:bg-teal-600" onClick={() => setIsMenuOpen(false)}>
               <Link href="/generator">Create Passphrase</Link>

@@ -21,9 +21,9 @@
                 <div class="header-top">
                     <h1 class="gradient-text">QuantumGuard</h1>
                     <div class="header-controls">
+                        <div id="pro-indicator" class="pro-indicator pro-inactive">⚡ Pro</div>
                         <button id="pro-button" class="pro-button" aria-label="Pro Settings">
-                            <span class="material-icons">star</span>
-                            <span class="pro-text">Get Pro</span>
+                            <span class="material-icons">settings</span>
                         </button>
                         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">
                             <span class="material-icons">dark_mode</span>
@@ -32,7 +32,6 @@
                 </div>
                 <div class="header-bottom">
                     <p class="subtitle">Generate Your Secure Credentials</p>
-                    <div id="pro-indicator" class="pro-indicator pro-inactive">⚡ Upgrade to Pro</div>
                 </div>
             </div>
 
@@ -79,7 +78,7 @@
                         Generate Passphrase
                     </button>
 
-                    <!-- Pro Feature: Advanced Wordlist Selection -->
+                    <!-- Pro Feature: Advanced Wordlists -->
                     <div id="advanced-wordlist-section" class="pro-feature-section" style="display: none;">
                         <div class="pro-feature-title">
                             <span class="material-icons">library_books</span>
@@ -87,12 +86,13 @@
                             <span class="pro-badge">Pro</span>
                         </div>
                         <div class="form-group">
-                            <label for="wordlist-select">Wordlist</label>
+                            <label for="wordlist-select">Choose Wordlist</label>
                             <select id="wordlist-select" class="select">
-                                <option value="eff">EFF Long (Default)</option>
-                                <option value="tech">Technology Terms</option>
-                                <option value="nature">Nature Words</option>
+                                <option value="eff">EFF Long (7,776 words)</option>
+                                <option value="tech">Technology Terms (50 words)</option>
+                                <option value="nature">Nature Words (50 words)</option>
                             </select>
+                            <div class="help-text">Pro users can select from specialized wordlists for different use cases</div>
                         </div>
                     </div>
 
