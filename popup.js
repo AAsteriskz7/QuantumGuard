@@ -200,10 +200,30 @@ function generatePassphrase() {
     const separator = separatorSelect.value;
     const capitalize = uppercaseCheckbox.checked;
     
+    // Select wordlist based on Pro settings
+    let selectedWordlist = effWordList; // Default
+    const wordlistSelect = document.getElementById('wordlist-select');
+    
+    if (isProActive && wordlistSelect && window.WORDLISTS) {
+        const selectedType = wordlistSelect.value;
+        switch (selectedType) {
+            case 'tech':
+                selectedWordlist = window.WORDLISTS.tech;
+                break;
+            case 'nature':
+                selectedWordlist = window.WORDLISTS.nature;
+                break;
+            case 'eff':
+            default:
+                selectedWordlist = effWordList;
+                break;
+        }
+    }
+    
     const words = [];
     for (let i = 0; i < wordCount; i++) {
-        const randomIndex = Math.floor(Math.random() * effWordList.length);
-        let word = effWordList[randomIndex];
+        const randomIndex = Math.floor(Math.random() * selectedWordlist.length);
+        let word = selectedWordlist[randomIndex];
         if (capitalize) {
             word = word.charAt(0).toUpperCase() + word.slice(1);
         }
@@ -236,13 +256,35 @@ function generatePassword() {
     const length = parseInt(lengthSlider.value);
     let charset = "";
     
-    if (uppercaseCheckbox.checked) charset += UPPERCASE_CHARS;
-    if (lowercaseCheckbox.checked) charset += LOWERCASE_CHARS;
-    if (numbersCheckbox.checked) charset += NUMBER_CHARS;
-    if (symbolsCheckbox.checked) charset += SYMBOL_CHARS;
+    // Check for Pro custom character set
+    const customCharsInput = document.getElementById('custom-chars');
+    const excludeSimilar = document.getElementById('exclude-similar');
+    const excludeAmbiguous = document.getElementById('exclude-ambiguous');
+    
+    if (isProActive && customCharsInput && customCharsInput.value.trim()) {
+        // Use custom character set for Pro users
+        charset = customCharsInput.value.trim();
+    } else {
+        // Build standard character set
+        if (uppercaseCheckbox.checked) charset += UPPERCASE_CHARS;
+        if (lowercaseCheckbox.checked) charset += LOWERCASE_CHARS;
+        if (numbersCheckbox.checked) charset += NUMBER_CHARS;
+        if (symbolsCheckbox.checked) charset += SYMBOL_CHARS;
+        
+        // Apply Pro exclusion filters
+        if (isProActive && excludeSimilar && excludeSimilar.checked) {
+            const similarChars = "0O1lI";
+            charset = charset.split('').filter(char => !similarChars.includes(char)).join('');
+        }
+        
+        if (isProActive && excludeAmbiguous && excludeAmbiguous.checked) {
+            const ambiguousChars = "{}[]()/'\"`,;<>.";
+            charset = charset.split('').filter(char => !ambiguousChars.includes(char)).join('');
+        }
+    }
     
     if (charset.length === 0) {
-        alert("Please select at least one character type");
+        alert("Please select at least one character type or enter custom characters");
         return;
     }
     
